@@ -1,0 +1,11 @@
+# render.yaml file
+services:
+  - type: static
+    name: ucubbc-board-hub
+    rootDir: .
+    buildCommand: npm run build
+    staticPublishPath: ./dist  # IMPORTANT: Change this if your publish directory is different (e.g., ./build)
+    pullRequestPreviewsEnabled: true
+    rewrites:
+      - source: /.*
+        destination: /index.html

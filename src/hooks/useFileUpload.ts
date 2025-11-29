@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 
-const BUCKET_NAME = 'attachments';
+const BUCKET_NAME = 'onbs-files'; // ✅ FIXED BUCKET NAME
 
 export type FileType = 'image' | 'video' | 'document';
 
@@ -20,18 +20,15 @@ export const useFileUpload = () => {
     setIsUploading(true);
 
     try {
-      // Validate file size (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
-        throw new Error('File size must be less than 10MB');
+        throw new Error('File size must be less than 50MB');
       }
 
-      // Create a unique path
       const fileExt = file.name.split('.').pop();
       const randomString = Math.random().toString(36).substring(2, 8);
       const fileName = `${Date.now()}-${randomString}.${fileExt}`;
-      const filePath = `notice_attachments/${fileName}`;
+      const filePath = `notice_attachments/${fileName}`; // folder auto-created 🔥
 
-      // Upload the file
       const { error: uploadError } = await supabase.storage
         .from(BUCKET_NAME)
         .upload(filePath, file, {
@@ -39,24 +36,19 @@ export const useFileUpload = () => {
           upsert: false,
         });
 
-      if (uploadError) {
-        throw new Error('Upload failed: ' + uploadError.message);
-      }
+      if (uploadError) throw new Error('Upload failed: ' + uploadError.message);
 
-      // Get the Public URL
-      const { data: publicUrlData } = supabase.storage
-        .from(BUCKET_NAME)
-        .getPublicUrl(filePath);
+      const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
 
       return {
-        url: publicUrlData.publicUrl,
+        url: data.publicUrl,
         type: getFileType(file),
         size: file.size,
       };
 
     } catch (error: any) {
       console.error('File upload error:', error.message);
-      throw error;
+      return null;
     } finally {
       setIsUploading(false);
     }

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase'; // Import the client
 
-const BUCKET_NAME = 'images'; // <--- !!! REPLACE WITH YOUR BUCKET NAME !!!
+const BUCKET_NAME = 'onbs-files'; // <--- !!! REPLACE WITH YOUR BUCKET NAME !!!
 
 export const useImageUpload = () => {
   const [isUploading, setIsUploading] = useState(false);

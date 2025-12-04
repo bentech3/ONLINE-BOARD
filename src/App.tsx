@@ -19,7 +19,8 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter  basename="/ONLINE-BOARD">
+        
           <Routes>
             <Route path="/" element={<Auth />} />
             <Route path="/notices" element={<PublicNotices />} />
